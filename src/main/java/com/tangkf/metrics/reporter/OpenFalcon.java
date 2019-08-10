@@ -1,14 +1,12 @@
-package com.jd.bdp;
+package com.tangkf.metrics.reporter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ning.http.client.AsyncCompletionHandler;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.AsyncHttpClientConfig;
-import com.ning.http.client.Response;
+import org.asynchttpclient.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Set;
 
 
@@ -26,7 +24,7 @@ public class OpenFalcon {
         return new Builder(baseUrl);
     }
 
-    private final AsyncHttpClient.BoundRequestBuilder requestBuilder;
+    private final BoundRequestBuilder requestBuilder;
     private ObjectMapper mapper = new ObjectMapper();
     private int batchSizeLimit = DEFAULT_BATCH_SIZE_LIMIT;
     private AsyncHttpClient ahc;
@@ -56,11 +54,11 @@ public class OpenFalcon {
     }
 
     private OpenFalcon(String baseURL, Integer connectionTimeout, Integer readTimeout) {
-        AsyncHttpClientConfig acc = new AsyncHttpClientConfig.Builder()
+        AsyncHttpClientConfig acc = new DefaultAsyncHttpClientConfig.Builder()
                 .setConnectTimeout(connectionTimeout)
                 .setReadTimeout(readTimeout)
                 .build();
-        ahc = new AsyncHttpClient(acc);
+        ahc = new DefaultAsyncHttpClient(acc);
         this.requestBuilder = ahc.preparePatch(baseURL + "/v1/push");
     }
 
@@ -96,7 +94,11 @@ public class OpenFalcon {
     public void close() {
         logger.debug("ahc isClosed {}", ahc.isClosed());
         if (!ahc.isClosed()) {
-            ahc.close();
+            try {
+                ahc.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.jd.bdp;
+package com.tangkf.metrics.reporter;
 
 import com.codahale.metrics.*;
 import com.codahale.metrics.Timer;
@@ -149,7 +149,7 @@ public class OpenFalconReporter extends ScheduledReporter {
     private static class MetricsCollector {
         private final String prefix;
         private final long timestamp;
-        private final Set<OpenFalconMetric> metrics = new HashSet<OpenFalconMetric>();
+        private final Set<OpenFalconMetric> metrics = new HashSet<>();
         private final String endpoint;
         private final int step;
 

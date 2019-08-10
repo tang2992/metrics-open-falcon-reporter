@@ -1,4 +1,4 @@
-package com.jd.bdp;
+package com.tangkf.metrics.reporter;
 
 /**
  * Created by tangshangwen on 17-3-6.
